@@ -29,7 +29,7 @@ from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parent
 PUBLIC_DIR = ROOT / "public"
-DEFAULT_CONFIG = ROOT / "config.json"
+DEFAULT_CONFIG = ROOT / "config" / "config.json"
 DEFAULT_DB = ROOT / "data" / "bthome.sqlite3"
 DEFAULT_DEMO_DB = ROOT / "data" / "demo.sqlite3"
 BUCKET_SECONDS = 300
