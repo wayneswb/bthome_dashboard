@@ -1,0 +1,21 @@
+{
+  "history_hours": 24,
+  "auto_add_unknown": true,
+  "sensors": [
+    {
+      "name": "客厅",
+      "color": "#f59e0b",
+      "match": ["ATC_LIVING"]
+    },
+    {
+      "name": "卧室",
+      "color": "#a78bfa",
+      "match": ["ATC_BEDROOM"]
+    },
+    {
+      "name": "书房",
+      "color": "#34d399",
+      "match": ["ATC_STUDY"]
+    }
+  ]
+}

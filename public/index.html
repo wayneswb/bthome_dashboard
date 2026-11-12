@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0a0e14">
+  <title>家里的温湿度</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌡️</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="title-block">
+        <p class="eyebrow">BTHome v2 · 家庭看板</p>
+        <h1>家里的温湿度</h1>
+      </div>
+      <div class="status">
+        <span id="badge" class="badge badge--loading"><span class="badge-dot"></span><span class="badge-text">连接中…</span></span>
+        <span id="updated" class="updated">—</span>
+        <button id="refresh" class="refresh" type="button" title="立即刷新" aria-label="立即刷新数据">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 11a8 8 0 1 0-2.3 5.7"></path>
+            <path d="M20 4v7h-7"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="grid" class="grid" aria-live="polite"></main>
+
+    <footer class="page-foot">
+      <span>数据来自 BTHome v2 蓝牙广播（未加密）</span>
+      <span class="foot-sep">·</span>
+      <span>每 60 秒自动刷新</span>
+    </footer>
+  </div>
+
+  <template id="sensor-card">
+    <article class="card">
+      <header class="card-head">
+        <div class="room">
+          <span class="dot"></span>
+          <div class="room-text">
+            <h2 class="room-name"></h2>
+            <p class="device-name"></p>
+          </div>
+        </div>
+        <span class="live-pill">
+          <span class="live-dot"></span>
+          <span class="live-label">离线</span>
+        </span>
+      </header>
+
+      <div class="metrics">
+        <div class="metric metric--temp">
+          <span class="metric-label">温度</span>
+          <p class="metric-value"><span class="value temp-value">--</span><span class="unit">°C</span></p>
+          <p class="metric-range temp-range">—</p>
+        </div>
+        <div class="metric metric--hum">
+          <span class="metric-label">湿度</span>
+          <p class="metric-value"><span class="value hum-value">--</span><span class="unit">%</span></p>
+          <p class="metric-range hum-range">—</p>
+        </div>
+      </div>
+
+      <div class="chart">
+        <div class="chart-head">
+          <span class="chart-title">最近 24 小时</span>
+          <span class="legend">
+            <span class="legend-item legend--temp"><i></i>温度</span>
+            <span class="legend-item legend--hum"><i></i>湿度</span>
+          </span>
+        </div>
+        <div class="chart-plot" tabindex="0" role="img">
+          <svg class="chart-svg" viewBox="0 0 1000 220" preserveAspectRatio="none" aria-hidden="true"></svg>
+          <div class="chart-crosshair" hidden></div>
+          <div class="chart-tooltip" hidden>
+            <span class="tt-time"></span>
+            <span class="tt-value tt-temp"></span>
+            <span class="tt-value tt-hum"></span>
+          </div>
+          <div class="chart-empty" hidden>这一段还没有数据</div>
+        </div>
+        <div class="chart-axis">
+          <span class="axis-start">24 小时前</span>
+          <span class="axis-mid">12 小时前</span>
+          <span>现在</span>
+        </div>
+      </div>
+
+      <p class="card-foot"></p>
+    </article>
+  </template>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
