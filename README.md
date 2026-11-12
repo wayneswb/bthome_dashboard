@@ -61,6 +61,39 @@ cp config.example.json config.json
 同源的 `./api/readings`
 
 
+## 用 Docker 部署
+
+```sh
+docker build -t bthome-dashboard .
+```
+
+Linux（树莓派 / NAS / 小主机，容器通过主机的 BlueZ 扫描蓝牙）：
+
+```sh
+docker run -d --name bthome-dashboard --restart unless-stopped \
+  -p 8000:8000 \
+  -v "$PWD/data:/app/data" \
+  -v "$PWD/config.json:/app/config.json:ro" \
+  -v /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro \
+  bthome-dashboard
+```
+
+- 不需要 `--privileged`；BLE 扫描通过主机 BlueZ 的 D-Bus 完成，主机需安装并启动 `bluez`
+- 如果主机的 socket 在 `/var/run/dbus/system_bus_socket`，替换挂载路径即可
+- 历史数据保存在宿主机的 `./data`；镜像默认以 root 运行，避免 SQLite 写入权限问题，
+  需要非 root 时可加 `--user`
+- 容器监听 `0.0.0.0:8000` 且页面没有鉴权，请只在可信局域网使用
+
+macOS / Windows 的 Docker Desktop（含 OrbStack）运行在虚拟机里，**无法访问宿主机蓝牙**。
+在这类系统上请原生运行 `python3 server.py`，或者只把容器当作纯看板：
+
+```sh
+docker run -d --name bthome-dashboard -p 8000:8000 bthome-dashboard \
+  python3 server.py --host 0.0.0.0 --demo
+```
+
+镜像采用多阶段构建，运行层基于 alpine，不含编译器和 pip。
+
 ## API
 
 `GET /api/readings`（时间均为 Unix 秒）：
@@ -103,6 +136,7 @@ cp config.example.json config.json
 │   └── app.js
 ├── server.py             # BLE 扫描 + SQLite + HTTP 服务
 ├── requirements.txt      # bleak
+├── Dockerfile            # 多阶段、alpine 运行镜像
 ├── config.example.json   # 房间/颜色配置示例
 └── data/                 # SQLite 数据库（自动生成，已 gitignore）
 ```

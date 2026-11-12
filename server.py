@@ -542,7 +542,10 @@ def scan_ble(store, config):
             except asyncio.CancelledError:
                 raise
             except Exception as exc:  # 蓝牙被关闭 / 权限不足等
-                log(f"BLE 扫描失败：{exc}；5 秒后重试")
+                hint = ""
+                if isinstance(exc, FileNotFoundError):
+                    hint = "（检查是否挂载了主机的 /run/dbus/system_bus_socket）"
+                log(f"BLE 扫描失败：{exc}{hint}；5 秒后重试")
                 await asyncio.sleep(5)
 
     asyncio.run(run())
